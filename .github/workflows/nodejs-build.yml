@@ -6,17 +6,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    # vercelのデフォルトはver.18.x
-    # https://vercel.com/docs/concepts/functions/serverless-functions/runtimes/node-js
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          # vercelのデフォルトはver.18.x
+          # https://vercel.com/docs/concepts/functions/serverless-functions/runtimes/node-js
+          node-version: "18.x"
       - run: yarn install
-      - run: yarn run build
+      # 環境変数の設定が必要なので一旦コメントアウト
+      # - run: yarn run build
