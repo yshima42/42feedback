@@ -6,9 +6,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    # vercelのデフォルトはver.18.x
+    # https://vercel.com/docs/concepts/functions/serverless-functions/runtimes/node-js
     strategy:
       matrix:
-        node-version: [15.x]
+        node-version: [18.x]
 
     steps:
       - uses: actions/checkout@v3
