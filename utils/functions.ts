@@ -10,11 +10,13 @@ export const fetchAllDataByFetchAPI = async (
   let nextPageUrl: RequestInfo | URL | undefined = input;
 
   while (nextPageUrl) {
+    // eslint-disable-next-line no-await-in-loop
     const res: Response = await fetch(nextPageUrl, init);
     if (!res.ok) {
       throw new Error(res.statusText);
     }
 
+    // eslint-disable-next-line no-await-in-loop
     const data = await res.json();
     allData = allData.concat(data);
     nextPageUrl = res.headers
@@ -30,9 +32,10 @@ export const fetchAllDataByAxios = async (reqOptions: AxiosRequestConfig) => {
   let nextPageUrl: string = reqOptions?.url ?? "";
 
   while (nextPageUrl) {
+    // eslint-disable-next-line no-await-in-loop
     const res: AxiosResponse = await axios.request(reqOptions);
     allData = allData.concat(res.data);
-    nextPageUrl = res.headers["link"]?.match(/<([^>]+)>;\s*rel="next"/)?.[1];
+    nextPageUrl = res.headers.link?.match(/<([^>]+)>;\s*rel="next"/)?.[1];
     reqOptions.url = nextPageUrl;
   }
 
@@ -64,13 +67,11 @@ export const fetchAccessToken = async () => {
 export const axiosRetryInSSG = async () => {
   axiosRetry(axios, {
     retries: 3,
-    retryDelay: (retryCount) => {
-      return retryCount * 1000;
-    },
+    retryDelay: (retryCount) => retryCount * 1000,
     retryCondition: () => true,
     onRetry: (retryCount, error) => {
       const errorMessageObject = {
-        retryCount: retryCount,
+        retryCount,
         status: error.response?.status,
         statusText: error.response?.statusText,
       };
