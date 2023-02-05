@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Heading } from "@chakra-ui/react";
 import React from "react";
-import { Layout } from "@/components/Layout";
+import Layout from "@/components/Layout";
 import { cursusProjects } from "../../../utils/objects";
 
 function Feedbacks() {

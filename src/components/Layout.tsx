@@ -5,44 +5,50 @@ type Props = {
   children: ReactNode;
 };
 
-export const Layout: React.FC<Props> = (props) => (
-  <div>
-    <Header />
-    <div className="layout">{props.children}</div>
-    <style jsx global>{`
-      html {
-        box-sizing: border-box;
-      }
+function Layout(props: Props) {
+  const { children } = props;
 
-      *,
-      *:before,
-      *:after {
-        box-sizing: inherit;
-      }
+  return (
+    <div>
+      <Header />
+      <div className="layout">{children}</div>
+      <style>{`
+        html {
+          box-sizing: border-box;
+        }
 
-      body {
-        margin: 0;
-        padding: 0;
-        font-size: 16px;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-          "Segoe UI Symbol";
-        background: rgba(0, 0, 0, 0.05);
-      }
+        *,
+        *:before,
+        *:after {
+          box-sizing: inherit;
+        }
 
-      input,
-      textarea {
-        font-size: 16px;
-      }
+        body {
+          margin: 0;
+          padding: 0;
+          font-size: 16px;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+            Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+            "Segoe UI Symbol";
+          background: rgba(0, 0, 0, 0.05);
+        }
 
-      button {
-        cursor: pointer;
-      }
-    `}</style>
-    <style jsx>{`
-      .layout {
-        padding: 0 2rem;
-      }
-    `}</style>
-  </div>
-);
+        input,
+        textarea {
+          font-size: 16px;
+        }
+
+        button {
+          cursor: pointer;
+        }
+      `}</style>
+      <style>{`
+        .layout {
+          padding: 0 2rem;
+        }
+      `}</style>
+    </div>
+  );
+}
+
+export default Layout;

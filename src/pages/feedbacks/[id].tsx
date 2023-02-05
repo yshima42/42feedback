@@ -1,4 +1,3 @@
-// import { Layout } from "@/components/Layout";
 import { Heading } from "@chakra-ui/react";
 import { GetStaticProps } from "next";
 import { API_URL, CAMPUS_ID, CURSUS_ID } from "utils/constants";
@@ -10,7 +9,7 @@ import {
   fetchAllDataByAxios,
 } from "utils/functions";
 import React from "react";
-import { Layout } from "@/components/Layout";
+import Layout from "@/components/Layout";
 import { cursusProjects } from "../../../utils/objects";
 
 type ProjectReview = {
@@ -72,7 +71,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
   } catch (error) {
     const errorMessage = "アクセストークンの取得に失敗しました";
     console.log(errorMessage);
-    console.log(error);
     return {
       props: {
         error: errorMessage,

@@ -1,24 +1,23 @@
 // Header.tsx
 import React from "react";
 import Link from "next/link";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
+import { Button } from "@chakra-ui/react";
 
-const Header: React.FC = () => {
-  const router = useRouter();
-  const isActive: (pathname: string) => boolean = (pathname) =>
-    router.pathname === pathname;
+function Header() {
+  // const router = useRouter();
+  // const isActive: (pathname: string) => boolean = (pathname) =>
+  //   router.pathname === pathname;
 
   const { data: session, status } = useSession();
 
   let left = (
     <div className="left">
       <Link href="/" legacyBehavior>
-        <a className="bold" data-active={isActive("/")}>
-          TOP
-        </a>
+        TOP
       </Link>
-      <style jsx>{`
+      <style>{`
         .bold {
           font-weight: bold;
         }
@@ -46,11 +45,9 @@ const Header: React.FC = () => {
     left = (
       <div className="left">
         <Link href="/" legacyBehavior>
-          <a className="bold" data-active={isActive("/")}>
-            TOP
-          </a>
+          TOP
         </Link>
-        <style jsx>{`
+        <style>{`
           .bold {
             font-weight: bold;
           }
@@ -74,7 +71,7 @@ const Header: React.FC = () => {
     right = (
       <div className="right">
         <p>Validating session ...</p>
-        <style jsx>{`
+        <style>{`
           .right {
             margin-left: auto;
           }
@@ -87,9 +84,9 @@ const Header: React.FC = () => {
     right = (
       <div className="right">
         <Link href="/api/auth/signin" legacyBehavior>
-          <a data-active={isActive("/signup")}>Log in</a>
+          Log in
         </Link>
-        <style jsx>{`
+        <style>{`
           a {
             text-decoration: none;
             color: var(--geist-foreground);
@@ -118,11 +115,9 @@ const Header: React.FC = () => {
     left = (
       <div className="left">
         <Link href="/" legacyBehavior>
-          <a className="bold" data-active={isActive("/")}>
-            TOP - login
-          </a>
+          TOP - login
         </Link>
-        <style jsx>{`
+        <style>{`
           .bold {
             font-weight: bold;
           }
@@ -148,10 +143,8 @@ const Header: React.FC = () => {
         <p>
           {session.user?.name} ({session.user?.email})
         </p>
-        <button onClick={() => signOut()}>
-          <a>Log out</a>
-        </button>
-        <style jsx>{`
+        <Button onClick={() => signOut()}>Log out</Button>
+        <style>{`
           a {
             text-decoration: none;
             color: var(--geist-foreground);
@@ -190,7 +183,7 @@ const Header: React.FC = () => {
     <nav>
       {left}
       {right}
-      <style jsx>{`
+      <style>{`
         nav {
           display: flex;
           padding: 2rem;
@@ -199,6 +192,6 @@ const Header: React.FC = () => {
       `}</style>
     </nav>
   );
-};
+}
 
 export default Header;

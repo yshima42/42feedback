@@ -1,9 +1,10 @@
-import { AuthGuard } from "@/components/AuthGuard";
+import AuthGuard from "@/components/AuthGuard";
 import { ChakraProvider } from "@chakra-ui/react";
 import { SessionProvider } from "next-auth/react";
 import { AppProps } from "next/app";
+import React from "react";
 
-const App = ({ Component, pageProps }: AppProps) => {
+function App({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider session={pageProps.session}>
       <ChakraProvider>
@@ -13,6 +14,6 @@ const App = ({ Component, pageProps }: AppProps) => {
       </ChakraProvider>
     </SessionProvider>
   );
-};
+}
 
 export default App;

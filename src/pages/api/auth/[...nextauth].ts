@@ -1,8 +1,13 @@
 import { NextApiHandler } from "next";
-import NextAuth from "next-auth";
+import NextAuth, {
+  Account,
+  DefaultSession,
+  Profile,
+  Session,
+  User,
+} from "next-auth";
 import { AdapterUser } from "next-auth/adapters";
 import { DefaultJWT, JWT } from "next-auth/jwt";
-import { Account, DefaultSession, Profile, Session, User } from "next-auth";
 import FortyTwoProvider from "next-auth/providers/42-school";
 
 declare module "next-auth" {
@@ -30,6 +35,7 @@ type SessionProps = {
   token: JWT;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-use-before-define
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options);
 export default authHandler;
 
@@ -44,11 +50,13 @@ const options = {
   callbacks: {
     async jwt({ token, account }: JwtProps) {
       if (account?.access_token) {
+        // eslint-disable-next-line no-param-reassign
         token.accessToken = account.access_token;
       }
       return token;
     },
     async session({ session, token }: SessionProps) {
+      // eslint-disable-next-line no-param-reassign
       session.accessToken = token.accessToken;
       return session;
     },
