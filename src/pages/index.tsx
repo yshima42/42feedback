@@ -1,12 +1,10 @@
-import { Inter } from "@next/font/google";
-import { Layout } from "@/components/Layout";
 import Link from "next/link";
 import { Heading } from "@chakra-ui/react";
-
-const inter = Inter({ subsets: ["latin"] });
+import React from "react";
+import { Layout } from "@/components/Layout";
 
 // export default function Home() {
-const Home = () => {
+function Home() {
   return (
     <Layout>
       <Heading>42 Progress</Heading>
@@ -15,6 +13,6 @@ const Home = () => {
       <Link href="/feedbacks">feedbacks</Link>
     </Layout>
   );
-};
+}
 
 export default Home;

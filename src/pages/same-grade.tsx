@@ -1,5 +1,4 @@
-import { Layout } from "@/components/Layout";
-import { UserCountBarChartByLevel } from "@/features/same-grade/components/UserCountBarChartByLevel";
+import UserCountBarChartByLevel from "@/features/same-grade/components/UserCountBarChartByLevel";
 import { Box, Heading } from "@chakra-ui/react";
 import { GetStaticProps } from "next";
 import { CursusUser } from "next-auth/providers/42-school";
@@ -16,9 +15,13 @@ import {
   fetchAccessToken,
   fetchAllDataByAxios,
 } from "utils/functions";
+import React from "react";
+import { Layout } from "@/components/Layout";
 
 type Props = {
+  // eslint-disable-next-line react/require-default-props
   data?: BarChartInfo[];
+  // eslint-disable-next-line react/require-default-props
   statusText?: string;
 };
 
@@ -78,7 +81,7 @@ const fetchCursusUsersByCampusIdAndBeginAt = async (
   accessToken: string
 ) => {
   const headersList = {
-    Authorization: "Bearer " + accessToken,
+    Authorization: `Bearer ${accessToken}`,
   };
   const reqOptions = {
     url: `${API_URL}/v2/cursus/${CURSUS_ID}/cursus_users?filter[campus_id]=${campusId}&filter[begin_at]=${beginAt}`,
@@ -94,7 +97,7 @@ const countUserByLevel = (users: CursusUser[]) => {
   const userCountByLevel: number[] = [];
   users.forEach((user) => {
     if (userCountByLevel[Math.floor(user.level)]) {
-      userCountByLevel[Math.floor(user.level)]++;
+      userCountByLevel[Math.floor(user.level)] += 1;
     } else {
       userCountByLevel[Math.floor(user.level)] = 1;
     }
@@ -119,7 +122,9 @@ export const getStaticProps: GetStaticProps = async () => {
       };
     }
 
+    // eslint-disable-next-line no-restricted-syntax
     for (const value of barChartInfo) {
+      // eslint-disable-next-line no-await-in-loop
       const users = await fetchCursusUsersByCampusIdAndBeginAt(
         value.usersInfo.campusId,
         value.usersInfo.beginAt,
@@ -137,7 +142,7 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 };
 
-const SameGrade = ({ data, statusText }: Props) => {
+function SameGrade({ data, statusText }: Props) {
   if (!data || statusText) {
     return <p>{statusText ?? "Empty Data"}</p>;
   }
@@ -145,25 +150,20 @@ const SameGrade = ({ data, statusText }: Props) => {
   return (
     <Layout>
       <Heading>Same Grade</Heading>
-      {data.map((value: BarChartInfo) => {
-        return (
-          <Box key={value.usersInfo.campusId}>
-            <p>
-              {value.displayInfo.xAxisLabel +
-                " / " +
-                value.usersInfo.userCount +
-                " students"}
-            </p>
-            <UserCountBarChartByLevel
-              userCountByLevel={value.usersInfo.userCountByLevel ?? []}
-              xAxisLabel={value.displayInfo.xAxisLabel}
-              barColor={value.displayInfo.barColor}
-            />
-          </Box>
-        );
-      })}
+      {data.map((value: BarChartInfo) => (
+        <Box key={value.usersInfo.campusId}>
+          <p>
+            {`${value.displayInfo.xAxisLabel} / ${value.usersInfo.userCount} students`}
+          </p>
+          <UserCountBarChartByLevel
+            userCountByLevel={value.usersInfo.userCountByLevel ?? []}
+            xAxisLabel={value.displayInfo.xAxisLabel}
+            barColor={value.displayInfo.barColor}
+          />
+        </Box>
+      ))}
     </Layout>
   );
-};
+}
 
 export default SameGrade;

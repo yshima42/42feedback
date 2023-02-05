@@ -1,15 +1,17 @@
-import { Layout } from "@/components/Layout";
+// import { Layout } from "@/components/Layout";
 import { Heading } from "@chakra-ui/react";
 import { GetStaticProps } from "next";
 import { API_URL, CAMPUS_ID, CURSUS_ID } from "utils/constants";
 import { Token } from "types/token";
 import Head from "next/head";
-import { cursusProjects } from "../../../utils/objects";
 import {
   axiosRetryInSSG,
   fetchAccessToken,
   fetchAllDataByAxios,
 } from "utils/functions";
+import React from "react";
+import { Layout } from "@/components/Layout";
+import { cursusProjects } from "../../../utils/objects";
 
 type ProjectReview = {
   id: number;
@@ -22,7 +24,7 @@ type ProjectReview = {
 
 const fetchProjectReviews = async (token: Token, projectId: string) => {
   const headersList = {
-    Authorization: "Bearer " + token?.access_token,
+    Authorization: `Bearer ${token?.access_token}`,
   };
 
   const reqOptions = {
@@ -33,28 +35,24 @@ const fetchProjectReviews = async (token: Token, projectId: string) => {
 
   const response = await fetchAllDataByAxios(reqOptions);
 
-  const projectReviews: ProjectReview[] = response.map((value) => {
-    return {
-      id: value["id"],
-      corrector: {
-        login: value["corrector"]["login"],
-      },
-      final_mark: value["final_mark"],
-      comment: value["comment"],
-    };
-  });
+  const projectReviews: ProjectReview[] = response.map((value) => ({
+    id: value.id,
+    corrector: {
+      login: value.corrector.login,
+    },
+    final_mark: value.final_mark,
+    comment: value.comment,
+  }));
 
   return projectReviews;
 };
 
 export const getStaticPaths = async () => {
-  const paths = cursusProjects.map((project) => {
-    return {
-      params: {
-        id: project.slug,
-      },
-    };
-  });
+  const paths = cursusProjects.map((project) => ({
+    params: {
+      id: project.slug,
+    },
+  }));
 
   return {
     paths,
@@ -109,10 +107,11 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
 type Props = {
   projectReviews: ProjectReview[];
+  // eslint-disable-next-line react/require-default-props
   error?: string;
 };
 
-const FeedbackComments = (props: Props) => {
+function FeedbackComments(props: Props) {
   const { projectReviews, error } = props;
 
   if (error) return <p>error: {error}</p>;
@@ -125,12 +124,12 @@ const FeedbackComments = (props: Props) => {
       <Heading>review-comments</Heading>
       <div>
         {projectReviews.map((value: ProjectReview) => (
-          <div key={value["id"]}>
-            {value["corrector"]["login"]}
+          <div key={value.id}>
+            {value.corrector.login}
             <br />
-            final_mark: {value["final_mark"]}
+            final_mark: {value.final_mark}
             <br />
-            comment: {value["comment"]}
+            comment: {value.comment}
             <br />
             <br />
           </div>
@@ -138,6 +137,6 @@ const FeedbackComments = (props: Props) => {
       </div>
     </Layout>
   );
-};
+}
 
 export default FeedbackComments;

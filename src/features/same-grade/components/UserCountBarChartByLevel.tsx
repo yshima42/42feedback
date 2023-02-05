@@ -16,17 +16,15 @@ type Props = {
   barColor: string;
 };
 
-export const UserCountBarChartByLevel = ({
+function UserCountBarChartByLevel({
   userCountByLevel,
   xAxisLabel,
   barColor,
-}: Props) => {
-  const data = userCountByLevel.map((count: number, index) => {
-    return {
-      level: `${index}`,
-      [xAxisLabel]: count,
-    };
-  });
+}: Props) {
+  const data = userCountByLevel.map((count: number, index) => ({
+    level: `${index}`,
+    [xAxisLabel]: count,
+  }));
 
   return (
     <BarChart
@@ -57,4 +55,6 @@ export const UserCountBarChartByLevel = ({
       <Bar dataKey={xAxisLabel} fill={barColor} />
     </BarChart>
   );
-};
+}
+
+export default UserCountBarChartByLevel;
