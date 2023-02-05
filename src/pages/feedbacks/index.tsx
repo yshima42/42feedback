@@ -1,6 +1,6 @@
 import { Layout } from "@/components/Layout";
 import Link from "next/link";
-import { Heading } from "@chakra-ui/react";
+import { Box, Heading } from "@chakra-ui/react";
 import { cursusProjects } from "../../../utils/objects";
 
 const Feedbacks = () => {
@@ -8,15 +8,11 @@ const Feedbacks = () => {
     <Layout>
       <Heading>Feedbacks</Heading>
       {cursusProjects.map((cursusProject) => (
-        <>
-          <Link
-            key={cursusProject.slug}
-            href={`/feedbacks/${cursusProject.slug}/1`}
-          >
+        <Box key={cursusProject.slug}>
+          <Link href={`/feedbacks/${cursusProject.slug}/1`}>
             {cursusProject.name}
           </Link>
-          <br />
-        </>
+        </Box>
       ))}
     </Layout>
   );
