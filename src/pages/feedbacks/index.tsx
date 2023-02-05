@@ -11,7 +11,7 @@ const Feedbacks = () => {
         <>
           <Link
             key={cursusProject.slug}
-            href={`/feedbacks/${cursusProject.slug}`}
+            href={`/feedbacks/${cursusProject.slug}/1`}
           >
             {cursusProject.name}
           </Link>
