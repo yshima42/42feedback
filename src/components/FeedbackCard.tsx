@@ -6,12 +6,15 @@ import { ProjectFeedback } from "types/projectFeedback";
 export const FeedbackCard = (props: { projectFeedback: ProjectFeedback }) => {
   const { projectFeedback } = props;
 
+  // propsとしてDate型を渡すと、errorになるので、stringとして取ってきている
+  const date = new Date(projectFeedback.updated_at);
+
   return (
-    <>
+    <Box marginY={2}>
       <Flex>
         <Avatar src={projectFeedback.corrector.image} />
         <Box alignSelf="end">
-          <Flex px="2">
+          <Flex px="2" alignItems="end">
             <Text fontSize="md">Evaluated by </Text>
             <Link
               href={`https://profile.intra.42.fr/users/${projectFeedback.corrector.login}`}
@@ -21,6 +24,7 @@ export const FeedbackCard = (props: { projectFeedback: ProjectFeedback }) => {
                 {projectFeedback.corrector.login}
               </Text>
             </Link>
+            <Text fontSize="xs">{date.toDateString()}</Text>
           </Flex>
         </Box>
         <Spacer />
@@ -30,7 +34,6 @@ export const FeedbackCard = (props: { projectFeedback: ProjectFeedback }) => {
               href={`https://projects.intra.42.fr/projects/${projectFeedback.slug}/projects_users/${projectFeedback.projects_user_id}`}
               target="_blank"
             >
-              {/* <Text fontSize="md">intra</Text> */}
               <ExternalLinkIcon boxSize={3.5} />
             </Link>
           </Flex>
@@ -45,6 +48,6 @@ export const FeedbackCard = (props: { projectFeedback: ProjectFeedback }) => {
       >
         {projectFeedback.comment}
       </Box>
-    </>
+    </Box>
   );
 };

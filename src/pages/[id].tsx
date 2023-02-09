@@ -1,11 +1,21 @@
 import { Layout } from "@/components/Layout";
-import { Center, Box, Input } from "@chakra-ui/react";
+
+import {
+  Center,
+  Box,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Text,
+  Select,
+  Flex,
+} from "@chakra-ui/react";
 import { GetStaticProps } from "next";
-import { API_URL, CAMPUS_ID, CURSUS_ID } from "utils/constants";
+import { API_URL, CAMPUS_ID, CURSUS_ID, SITE_NAME } from "utils/constants";
 import Head from "next/head";
 import { cursusProjects } from "../../utils/objects";
 import { axiosRetryInSSG, fetchAllDataByAxios } from "utils/functions";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { CursusUser } from "types/cursusUsers";
 import { ProjectFeedback } from "types/projectFeedback";
@@ -14,6 +24,7 @@ import cursusUsers from "utils/preval/cursus-users.preval";
 import token from "utils/preval/access-token.preval";
 import { ScaleTeam } from "types/scaleTeam";
 import escapeStringRegexp from "escape-string-regexp";
+import { SearchIcon } from "@chakra-ui/icons";
 
 const fetchScaleTeams = async (projectId: string, accessToken: string) => {
   const url = `${API_URL}/v2/projects/${projectId}/scale_teams?filter[cursus_id]=${CURSUS_ID}&filter[campus_id]=${CAMPUS_ID}`;
@@ -57,6 +68,7 @@ const makeProjectFeedbacks = (
     return {
       id: value.id,
       slug: slug,
+      updated_at: value.updated_at,
       corrector: {
         login: login,
         image: image,
@@ -73,7 +85,7 @@ export const getStaticPaths = async () => {
   const paths = cursusProjects.map((project) => {
     return {
       params: {
-        id: project.slug,
+        id: project.name,
       },
     };
   });
@@ -90,8 +102,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
     return { notFound: true };
   }
 
-  const slug = context.params.id as string;
-  if (!cursusProjects.find((project) => project.slug === slug)) {
+  const name = context.params.id as string;
+  const slug = cursusProjects.find((project) => project.name === name)?.slug;
+  if (!slug) {
     return { notFound: true };
   }
 
@@ -108,7 +121,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     );
 
     return {
-      props: { projectFeedbacks },
+      props: { projectFeedbacks, projectName: name },
       revalidate: 60 * 60,
     };
   } catch (error) {
@@ -117,11 +130,20 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
 };
 
+enum SortType {
+  UpdateAtAsc = "UpdateAtAsc",
+  UpdateAtDesc = "UpdateAtDesc",
+  CommentLengthASC = "CommentLengthASC",
+  CommentLengthDesc = "CommentLengthDesc",
+  None = "None",
+}
+
 type Props = {
   projectFeedbacks: ProjectFeedback[];
+  projectName: string;
 };
 
-const ProjectFeedbacks = (props: Props) => {
+const ProjectFeedbacks = (props: { projectFeedbacks: ProjectFeedback[] }) => {
   const { projectFeedbacks } = props;
 
   return (
@@ -138,27 +160,59 @@ const ProjectFeedbacks = (props: Props) => {
 const FEEDBACKS_PER_PAGE = 20;
 
 const PaginatedProjectFeedbacks = (props: Props) => {
-  const { projectFeedbacks } = props;
+  const { projectFeedbacks, projectName } = props;
 
   const [searchedProjectFeedbacks, setSearchedProjectFeedbacks] =
     useState(projectFeedbacks);
+  const [sortedProjectFeedbacks, setSortedProjectFeedbacks] =
+    useState(projectFeedbacks);
+  const [sortType, setSortType] = useState(SortType.UpdateAtDesc);
   const [itemOffset, setItemOffset] = useState(0);
   const [isComposing, setIsComposing] = useState(false);
+
   const endOffset = itemOffset + FEEDBACKS_PER_PAGE;
-  const currentItems = searchedProjectFeedbacks.slice(itemOffset, endOffset);
+  const currentItems = sortedProjectFeedbacks.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(
     searchedProjectFeedbacks.length / FEEDBACKS_PER_PAGE
   );
 
   // ページ遷移時にページトップにスクロール
-  // こちら参考: https://stackoverflow.com/questions/36904185/react-router-scroll-to-top-on-every-transition
-  // もっと良いものあるかも: https://developer.mozilla.org/ja/docs/Web/API/Window/scrollTo
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    window.scroll(0, 0);
   }, [currentItems]);
+
+  const sortFeedback = useCallback(
+    (feedbacks: ProjectFeedback[], sortType: SortType) => {
+      const callback = (a: ProjectFeedback, b: ProjectFeedback) => {
+        switch (sortType) {
+          case SortType.UpdateAtAsc:
+            return (
+              new Date(a.updated_at).getTime() -
+              new Date(b.updated_at).getTime()
+            );
+          case SortType.UpdateAtDesc:
+            return (
+              new Date(b.updated_at).getTime() -
+              new Date(a.updated_at).getTime()
+            );
+          case SortType.CommentLengthASC:
+            return a.comment.length - b.comment.length;
+          case SortType.CommentLengthDesc:
+            return b.comment.length - a.comment.length;
+          case SortType.None:
+            return 0;
+        }
+      };
+      const newSortedProjectFeedbacks = [...feedbacks].sort(callback);
+      setSortedProjectFeedbacks(newSortedProjectFeedbacks);
+    },
+    []
+  );
+
+  // ソートを管理
+  useEffect(() => {
+    sortFeedback(searchedProjectFeedbacks, sortType);
+  }, [searchedProjectFeedbacks, sortFeedback, sortType]);
 
   const handlePageChange = (event: { selected: number }) => {
     const newOffset =
@@ -210,44 +264,69 @@ const PaginatedProjectFeedbacks = (props: Props) => {
   };
 
   return (
-    <Layout name={projectFeedbacks[0].slug}>
+    <>
       <Head>
         <meta name="robots" content="noindex,nofollow" />
+        <title>
+          {projectName} - {SITE_NAME}
+        </title>
       </Head>
-      <Input
-        placeholder="intra名、またはフィードバックの内容"
-        onChange={handleInputChange}
-        onCompositionStart={handleCompositionStart}
-        onCompositionEnd={handleCompositionEnd}
-        marginBottom={4}
-      />
-      <ProjectFeedbacks projectFeedbacks={currentItems} />
-      <Center>
-        {pageCount === 0 || pageCount == 1 ? (
-          <></>
-        ) : (
-          <ReactPaginate
-            breakLabel="..."
-            nextLabel=">"
-            onPageChange={handlePageChange}
-            forcePage={itemOffset / FEEDBACKS_PER_PAGE}
-            pageRangeDisplayed={5}
-            pageCount={pageCount}
-            previousLabel="<"
-            pageClassName="page-item"
-            pageLinkClassName="page-link"
-            previousClassName="page-item"
-            previousLinkClassName="page-link"
-            nextClassName="page-item"
-            nextLinkClassName="page-link"
-            breakClassName="page-item"
-            breakLinkClassName="page-link"
-            containerClassName="pagination"
-            activeClassName="active"
-          />
-        )}
-      </Center>
-    </Layout>
+      <Layout pageTitle={projectName}>
+        <Flex>
+          <InputGroup size="md" marginBottom={2}>
+            <InputLeftElement pointerEvents="none">
+              <SearchIcon color="gray.300" />
+            </InputLeftElement>
+            <Input
+              placeholder="login or comment"
+              onChange={handleInputChange}
+              onCompositionStart={handleCompositionStart}
+              onCompositionEnd={handleCompositionEnd}
+            />
+          </InputGroup>
+          <Select
+            width={200}
+            marginLeft={0.5}
+            textAlign={"center"}
+            backgroundColor={"gray.100"}
+            placeholder={"⇅ Sort"}
+            onChange={(event) => setSortType(event.target.value as SortType)}
+          >
+            <option value={SortType.UpdateAtDesc}>Date(Desc)</option>
+            <option value={SortType.UpdateAtAsc}>Date(Asc)</option>
+            <option value={SortType.CommentLengthDesc}>Length(Desc)</option>
+            <option value={SortType.CommentLengthASC}>Length(Asc)</option>
+          </Select>
+        </Flex>
+        <Text opacity={0.6}>{searchedProjectFeedbacks.length} feedbacks</Text>
+        <ProjectFeedbacks projectFeedbacks={currentItems} />
+        <Center>
+          {pageCount === 0 || pageCount == 1 ? (
+            <></>
+          ) : (
+            <ReactPaginate
+              breakLabel="..."
+              nextLabel=">"
+              onPageChange={handlePageChange}
+              forcePage={itemOffset / FEEDBACKS_PER_PAGE}
+              pageRangeDisplayed={5}
+              pageCount={pageCount}
+              previousLabel="<"
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              breakClassName="page-item"
+              breakLinkClassName="page-link"
+              containerClassName="pagination"
+              activeClassName="active"
+            />
+          )}
+        </Center>
+      </Layout>
+    </>
   );
 };
 
