@@ -14,7 +14,7 @@ export const ListGridSwitch: React.FC<Props> = (props) => {
     <Box>
       <IconButton
         aria-label="setList"
-        size={{ base: "xs", md: "sm" }}
+        size="xs"
         icon={<HamburgerIcon />}
         onClick={() => setIsList(true)}
         isActive={isList}
@@ -24,7 +24,7 @@ export const ListGridSwitch: React.FC<Props> = (props) => {
       </IconButton>
       <IconButton
         aria-label="unsetList"
-        size={{ base: "xs", md: "sm" }}
+        size="xs"
         icon={<DragHandleIcon />}
         onClick={() => setIsList(false)}
         isActive={!isList}
