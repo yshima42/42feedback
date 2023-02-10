@@ -65,6 +65,9 @@ const Header: React.FC = () => {
       align="center"
       justify="space-between"
       padding={{ base: "0.5rem", md: "0.7rem" }}
+      position="sticky"
+      top={0}
+      zIndex={1}
     >
       {left}
       {right}
