@@ -1,9 +1,18 @@
-// Header.tsx
 import React from "react";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
-import { Avatar, Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
-import { SITE_NAME } from "utils/constants";
+import {
+  Avatar,
+  Flex,
+  Heading,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+} from "@chakra-ui/react";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { SITE_NAME, MAIN_COLOR } from "utils/constants";
 
 const Header: React.FC = () => {
   const { data: session, status } = useSession();
@@ -32,17 +41,16 @@ const Header: React.FC = () => {
     );
     right = (
       <Flex align="center">
-        <Box pr={4} fontSize="xs" display={{ base: "none", md: "flex" }}>
-          <Avatar src={session.user?.image ?? ""} size="sm" />
-        </Box>
-        <Button
-          colorScheme="gray"
-          color="gray.600"
-          size="xs"
-          onClick={() => signOut()}
-        >
-          Log out
-        </Button>
+        <Menu isLazy>
+          <MenuButton>
+            <Avatar src={session.user?.image ?? ""} size="sm" />
+          </MenuButton>
+          <MenuList color="gray.600" w={1}>
+            <MenuItem icon={<ArrowForwardIcon />} onClick={() => signOut()}>
+              Logout
+            </MenuItem>
+          </MenuList>
+        </Menu>
       </Flex>
     );
   }
@@ -50,11 +58,11 @@ const Header: React.FC = () => {
   return (
     <Flex
       as="nav"
-      bg="gray.700"
+      bg={MAIN_COLOR}
       color="gray.50"
       align="center"
       justify="space-between"
-      padding={{ base: "0.5rem", md: "1rem" }}
+      padding={{ base: "0.5rem", md: "0.7rem" }}
     >
       {left}
       {right}
