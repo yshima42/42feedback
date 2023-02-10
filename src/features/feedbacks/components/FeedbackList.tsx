@@ -10,9 +10,9 @@ type Props = {
 export const FeedbackList = ({ feedbacks, searchWord }: Props) => {
   return (
     <>
-      {feedbacks.map((projectFeedback: Feedback) => (
-        <Box key={projectFeedback.id} mb={8}>
-          <FeedbackCard feedback={projectFeedback} searchWord={searchWord} />
+      {feedbacks.map((feedback: Feedback) => (
+        <Box key={feedback.id} mb={8}>
+          <FeedbackCard feedback={feedback} searchWord={searchWord} />
         </Box>
       ))}
     </>

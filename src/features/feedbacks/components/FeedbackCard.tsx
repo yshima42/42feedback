@@ -2,6 +2,7 @@ import { Avatar, Box, Flex, Highlight, Spacer, Text } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import { Feedback } from "types/Feedback";
+import { HIGHLIGHT_COLOR } from "utils/constants";
 
 type Props = {
   feedback: Feedback;
@@ -28,7 +29,7 @@ export const FeedbackCard = ({ feedback, searchWord }: Props) => {
               <Text px="1" fontSize="md" fontWeight="bold">
                 <Highlight
                   query={searchWord}
-                  styles={{ px: "1", py: "1", bg: "yellow.100" }}
+                  styles={{ px: "1", py: "1", bg: HIGHLIGHT_COLOR }}
                 >
                   {feedback.corrector.login}
                 </Highlight>
@@ -58,7 +59,7 @@ export const FeedbackCard = ({ feedback, searchWord }: Props) => {
       >
         <Highlight
           query={searchWord}
-          styles={{ px: "1", py: "1", bg: "yellow.100" }}
+          styles={{ px: "1", py: "1", bg: HIGHLIGHT_COLOR }}
         >
           {feedback.comment}
         </Highlight>
