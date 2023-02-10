@@ -35,7 +35,7 @@ const makeFeedbacks = (
   // 42apiのバグでcursus_usersの中に存在しないユーザーがいる場合があるので、その場合のvalidate処理
   const validScaleTeams = scaleTeams.filter(isValidScaleTeam);
 
-  const projectFeedbacks = validScaleTeams.map((value: ScaleTeam) => {
+  const feedbacks = validScaleTeams.map((value: ScaleTeam) => {
     const login = value.corrector.login;
 
     const targetCursusUser = cursusUsers.find(
@@ -57,7 +57,7 @@ const makeFeedbacks = (
     };
   });
 
-  return projectFeedbacks;
+  return feedbacks;
 };
 
 export const getStaticPaths = async () => {
@@ -165,7 +165,7 @@ const Feedbacks = ({ feedbacks, projectName }: Props) => {
           setSortType={setSortType}
           feedbackCount={targetFeedbacks.length}
         />
-        <FeedbackList feedbacks={currentItems} />
+        <FeedbackList feedbacks={currentItems} searchWord={searchWord} />
         <FeedbackPagination
           feedbackCount={feedbacks.length}
           targetFeedbackCount={targetFeedbacks.length}
