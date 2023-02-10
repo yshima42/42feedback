@@ -62,7 +62,8 @@ const Header: React.FC = () => {
       color="gray.50"
       align="center"
       justify="space-between"
-      padding={{ base: "0.5rem", md: "0.7rem" }}
+      paddingY={{ base: "0.5rem", md: "0.7rem" }}
+      paddingX={{ base: "0.8rem", md: "1.5rem" }}
     >
       {left}
       {right}
