@@ -4,14 +4,15 @@ import { Feedback } from "types/Feedback";
 
 type Props = {
   feedbacks: Feedback[];
+  searchWord: string;
 };
 
-export const FeedbackList = ({ feedbacks }: Props) => {
+export const FeedbackList = ({ feedbacks, searchWord }: Props) => {
   return (
     <>
       {feedbacks.map((projectFeedback: Feedback) => (
         <Box key={projectFeedback.id} mb={8}>
-          <FeedbackCard feedback={projectFeedback} />
+          <FeedbackCard feedback={projectFeedback} searchWord={searchWord} />
         </Box>
       ))}
     </>

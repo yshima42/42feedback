@@ -165,7 +165,7 @@ const Feedbacks = ({ feedbacks, projectName }: Props) => {
           setSortType={setSortType}
           feedbackCount={targetFeedbacks.length}
         />
-        <FeedbackList feedbacks={currentItems} />
+        <FeedbackList feedbacks={currentItems} searchWord={searchWord} />
         <FeedbackPagination
           feedbackCount={feedbacks.length}
           targetFeedbackCount={targetFeedbacks.length}

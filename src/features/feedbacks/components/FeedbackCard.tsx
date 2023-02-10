@@ -1,13 +1,14 @@
-import { Avatar, Box, Flex, Spacer, Text } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Highlight, Spacer, Text } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import { Feedback } from "types/Feedback";
 
 type Props = {
   feedback: Feedback;
+  searchWord: string;
 };
 
-export const FeedbackCard = ({ feedback }: Props) => {
+export const FeedbackCard = ({ feedback, searchWord }: Props) => {
   // propsとしてDate型を渡すと、errorになるので、stringとして取ってきている
   const date = new Date(feedback.updated_at);
 
@@ -25,7 +26,12 @@ export const FeedbackCard = ({ feedback }: Props) => {
               target="_blank"
             >
               <Text px="1" fontSize="md" fontWeight="bold">
-                {feedback.corrector.login}
+                <Highlight
+                  query={searchWord}
+                  styles={{ px: "1", py: "1", bg: "yellow.100" }}
+                >
+                  {feedback.corrector.login}
+                </Highlight>
               </Text>
             </Link>
             <Text fontSize="xs">{date.toDateString()}</Text>
@@ -50,7 +56,12 @@ export const FeedbackCard = ({ feedback }: Props) => {
         boxShadow="md"
         whiteSpace="pre-wrap"
       >
-        {feedback.comment}
+        <Highlight
+          query={searchWord}
+          styles={{ px: "1", py: "1", bg: "yellow.100" }}
+        >
+          {feedback.comment}
+        </Highlight>
       </Box>
     </Box>
   );
