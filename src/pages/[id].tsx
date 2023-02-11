@@ -12,7 +12,10 @@ import { ScaleTeam } from "types/scaleTeam";
 import escapeStringRegexp from "escape-string-regexp";
 import { FeedbackFilters } from "@/features/feedbacks/components/FeedbackFilters";
 import { PaginatedFeedbackList } from "@/features/feedbacks/components/PaginatedFeedbackList";
-import { FeedbacksState, useFeedbacks } from "@/hooks/useFeedbacks";
+import {
+  FeedbacksState,
+  useFeedbacks,
+} from "@/features/feedbacks/hooks/useFeedbacks";
 
 const isValidScaleTeam = (scaleTeam: ScaleTeam) => {
   if (
@@ -113,6 +116,7 @@ const Feedbacks = ({ feedbacks, projectName }: Props) => {
     filteredFeedbacks: feedbacks,
   };
   const [state, dispatch] = useFeedbacks(initialState);
+  const { filteredFeedbacks, searchWord } = state;
 
   return (
     <>
@@ -125,11 +129,11 @@ const Feedbacks = ({ feedbacks, projectName }: Props) => {
       <Layout pageTitle={projectName}>
         <FeedbackFilters
           dispatch={dispatch}
-          feedbackCount={state.filteredFeedbacks.length}
+          feedbackCount={filteredFeedbacks.length}
         />
         <PaginatedFeedbackList
-          feedbacks={state.filteredFeedbacks}
-          searchWord={state.searchWord}
+          feedbacks={filteredFeedbacks}
+          searchWord={searchWord}
         />
       </Layout>
     </>

@@ -1,4 +1,4 @@
-import { FeedbacksAction } from "@/hooks/useFeedbacks";
+import { FeedbacksAction } from "@/features/feedbacks/hooks/useFeedbacks";
 import { SearchIcon } from "@chakra-ui/icons";
 import { Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import { Dispatch, useState } from "react";

@@ -1,4 +1,4 @@
-import { FeedbacksAction } from "@/hooks/useFeedbacks";
+import { FeedbacksAction } from "@/features/feedbacks/hooks/useFeedbacks";
 import { Select } from "@chakra-ui/react";
 import { Dispatch } from "react";
 import { SortType } from "types/Feedback";
