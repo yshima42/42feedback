@@ -5,7 +5,7 @@ import Head from "next/head";
 import { cursusProjects } from "../../utils/objects";
 import { axiosRetryInSSG, fetchScaleTeams } from "utils/functions";
 import { CursusUser } from "types/cursusUsers";
-import { CompareFunc, Feedback, SortType } from "types/Feedback";
+import { Feedback, SortType } from "types/Feedback";
 import cursusUsers from "utils/preval/cursus-users.preval";
 import token from "utils/preval/access-token.preval";
 import { ScaleTeam } from "types/scaleTeam";
@@ -100,21 +100,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
 };
 
-const sortTypeToCompareFunc = new Map<SortType, CompareFunc>([
-  [SortType.UpdateAtAsc, (a, b) => a.updated_at.localeCompare(b.updated_at)],
-  [SortType.UpdateAtDesc, (a, b) => b.updated_at.localeCompare(a.updated_at)],
-  [SortType.CommentLengthASC, (a, b) => a.comment.length - b.comment.length],
-  [SortType.CommentLengthDesc, (a, b) => b.comment.length - a.comment.length],
-  [SortType.None, (a, b) => 0],
-]);
-
-const includesSearchKeyword = (feedback: Feedback, searchWord: string) => {
-  // 入力された文字列を安全に正規表現に変換
-  const escapedSearchKeyword = escapeStringRegexp(searchWord);
-  const regex = new RegExp(escapedSearchKeyword, "i");
-  return feedback.comment.match(regex) || feedback.corrector.login.match(regex);
-};
-
 type Props = {
   feedbacks: Feedback[];
   projectName: string;
@@ -143,7 +128,7 @@ const Feedbacks = ({ feedbacks, projectName }: Props) => {
           feedbackCount={state.filteredFeedbacks.length}
         />
         <PaginatedFeedbackList
-          targetFeedbacks={state.filteredFeedbacks}
+          feedbacks={state.filteredFeedbacks}
           searchWord={state.searchWord}
         />
       </Layout>

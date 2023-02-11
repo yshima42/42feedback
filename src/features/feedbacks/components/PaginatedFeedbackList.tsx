@@ -7,12 +7,12 @@ import { FeedbackList } from "./FeedbackList";
 
 type Props = {
   searchWord: string;
-  targetFeedbacks: Feedback[];
+  feedbacks: Feedback[];
 };
 
 export const PaginatedFeedbackList = ({
   searchWord,
-  targetFeedbacks,
+  feedbacks: targetFeedbacks,
 }: Props) => {
   const [itemOffset, setItemOffset] = useState(0);
   const endOffset = itemOffset + FEEDBACKS_PER_PAGE;
