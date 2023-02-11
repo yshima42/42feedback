@@ -1,9 +1,10 @@
+import { FeedbacksAction } from "@/hooks/useFeedbacks";
 import { Select } from "@chakra-ui/react";
 import { Dispatch } from "react";
 import { SortType } from "types/Feedback";
 
 type Props = {
-  dispatch: Dispatch<any>;
+  dispatch: Dispatch<FeedbacksAction>;
 };
 
 export const FeedbackSortSelect = ({ dispatch }: Props) => {

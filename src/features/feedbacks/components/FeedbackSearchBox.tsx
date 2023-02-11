@@ -1,9 +1,10 @@
+import { FeedbacksAction } from "@/hooks/useFeedbacks";
 import { SearchIcon } from "@chakra-ui/icons";
 import { Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import { Dispatch, useState } from "react";
 
 type Props = {
-  dispatch: Dispatch<any>;
+  dispatch: Dispatch<FeedbacksAction>;
 };
 
 export const FeedbackSearchBox = ({ dispatch }: Props) => {

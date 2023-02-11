@@ -1,10 +1,11 @@
+import { FeedbacksAction } from "@/hooks/useFeedbacks";
 import { Flex, Text } from "@chakra-ui/react";
 import { Dispatch } from "react";
 import { FeedbackSearchBox } from "./FeedbackSearchBox";
 import { FeedbackSortSelect } from "./FeedbackSortSelect";
 
 type Props = {
-  dispatch: Dispatch<any>;
+  dispatch: Dispatch<FeedbacksAction>;
   feedbackCount: number;
 };
 
