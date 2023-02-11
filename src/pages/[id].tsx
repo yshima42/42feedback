@@ -4,7 +4,7 @@ import { SITE_NAME } from "utils/constants";
 import Head from "next/head";
 import { cursusProjects } from "../../utils/objects";
 import { axiosRetryInSSG, fetchScaleTeams } from "utils/functions";
-import { useEffect, useState } from "react";
+import { useReducer } from "react";
 import { CursusUser } from "types/cursusUsers";
 import { CompareFunc, Feedback, SortType } from "types/Feedback";
 import cursusUsers from "utils/preval/cursus-users.preval";
@@ -120,24 +120,90 @@ type Props = {
   projectName: string;
 };
 
-const Feedbacks = ({ feedbacks, projectName }: Props) => {
-  const [searchWord, setSearchWord] = useState("");
-  const [sortType, setSortType] = useState(SortType.UpdateAtDesc);
-  const [targetFeedbacks, setTargetFeedbacks] = useState([] as Feedback[]);
+type State = {
+  searchWord: string;
+  sortType: SortType;
+  allFeedbacks: Feedback[];
+  filteredFeedbacks: Feedback[];
+};
 
-  // 対象となるフィードバックを更新する
-  useEffect(() => {
-    // 検索ワードでフィルタリング
-    const searchedFeedbacks = feedbacks.filter((feedback) =>
-      includesSearchKeyword(feedback, searchWord)
-    );
-    // フィルタリング後のフィードバックをソート
-    const sortedFeedbacks = searchedFeedbacks.sort(
-      sortTypeToCompareFunc.get(sortType)
-    );
-    // 更新
-    setTargetFeedbacks(sortedFeedbacks);
-  }, [sortType, searchWord, feedbacks]);
+type Action =
+  | {
+      type: "INPUT";
+      searchWord: string;
+    }
+  | {
+      type: "INPUT_COMPOSITION";
+      newWord: string;
+    }
+  | {
+      type: "SELECT";
+      sortType: SortType;
+    };
+
+type FilterCondition = Omit<State, "allFeedbacks" | "filteredFeedbacks">;
+
+const feedbacksReducer = (state: State, action: Action): State => {
+  const filterFeedbacks = (filterCondition: FilterCondition) => {
+    return state.allFeedbacks
+      .filter((feedback) =>
+        includesSearchKeyword(feedback, filterCondition.searchWord)
+      )
+      .sort(sortTypeToCompareFunc.get(filterCondition.sortType));
+  };
+
+  switch (action.type) {
+    case "INPUT": {
+      const newSearchWord = action.searchWord;
+      const newFilteredFeedbacks = filterFeedbacks({
+        searchWord: newSearchWord,
+        sortType: state.sortType,
+      });
+
+      return {
+        ...state,
+        searchWord: newSearchWord,
+        filteredFeedbacks: newFilteredFeedbacks,
+      };
+    }
+    case "INPUT_COMPOSITION": {
+      const newSearchWord = state.searchWord + action.newWord;
+      const newFilteredFeedbacks = filterFeedbacks({
+        searchWord: newSearchWord,
+        sortType: state.sortType,
+      });
+
+      return {
+        ...state,
+        searchWord: newSearchWord,
+        filteredFeedbacks: newFilteredFeedbacks,
+      };
+    }
+    case "SELECT": {
+      const newSortType = action.sortType;
+      const newFilteredFeedbacks = filterFeedbacks({
+        searchWord: state.searchWord,
+        sortType: newSortType,
+      });
+
+      return {
+        ...state,
+        sortType: newSortType,
+        filteredFeedbacks: newFilteredFeedbacks,
+      };
+    }
+    default:
+      throw new Error("invalid action type");
+  }
+};
+
+const Feedbacks = ({ feedbacks, projectName }: Props) => {
+  const [state, dispatch] = useReducer(feedbacksReducer, {
+    searchWord: "",
+    sortType: SortType.UpdateAtDesc,
+    allFeedbacks: feedbacks,
+    filteredFeedbacks: feedbacks,
+  });
 
   return (
     <>
@@ -149,13 +215,12 @@ const Feedbacks = ({ feedbacks, projectName }: Props) => {
       </Head>
       <Layout pageTitle={projectName}>
         <FeedbackFilters
-          setSearchWord={setSearchWord}
-          setSortType={setSortType}
-          feedbackCount={targetFeedbacks.length}
+          dispatch={dispatch}
+          feedbackCount={state.filteredFeedbacks.length}
         />
         <PaginatedFeedbackList
-          targetFeedbacks={targetFeedbacks}
-          searchWord={searchWord}
+          targetFeedbacks={state.filteredFeedbacks}
+          searchWord={state.searchWord}
         />
       </Layout>
     </>

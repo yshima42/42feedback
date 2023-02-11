@@ -1,12 +1,12 @@
 import { Select } from "@chakra-ui/react";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch } from "react";
 import { SortType } from "types/Feedback";
 
 type Props = {
-  setSortType: Dispatch<SetStateAction<SortType>>;
+  dispatch: Dispatch<any>;
 };
 
-export const FeedbackSortSelect = ({ setSortType }: Props) => {
+export const FeedbackSortSelect = ({ dispatch }: Props) => {
   return (
     <Select
       width={180}
@@ -14,7 +14,9 @@ export const FeedbackSortSelect = ({ setSortType }: Props) => {
       textAlign={"center"}
       backgroundColor={"gray.100"}
       placeholder={"⇅ Sort"}
-      onChange={(event) => setSortType(event.target.value as SortType)}
+      onChange={(event) =>
+        dispatch({ type: "SELECT", sortType: event.target.value as SortType })
+      }
       fontSize="sm"
     >
       <option value={SortType.UpdateAtDesc}>Date(Desc)</option>
