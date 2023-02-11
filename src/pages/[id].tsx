@@ -1,6 +1,6 @@
 import { Layout } from "@/components/Layout";
 import { GetStaticProps } from "next";
-import { SITE_NAME, FEEDBACKS_PER_PAGE } from "utils/constants";
+import { SITE_NAME } from "utils/constants";
 import Head from "next/head";
 import { cursusProjects } from "../../utils/objects";
 import { axiosRetryInSSG, fetchScaleTeams } from "utils/functions";
@@ -11,9 +11,8 @@ import cursusUsers from "utils/preval/cursus-users.preval";
 import token from "utils/preval/access-token.preval";
 import { ScaleTeam } from "types/scaleTeam";
 import escapeStringRegexp from "escape-string-regexp";
-import { FeedbackList } from "@/features/feedbacks/components/FeedbackList";
-import { FeedbackPagination } from "@/features/feedbacks/components/FeedbackPagination";
 import { FeedbackFilters } from "@/features/feedbacks/components/FeedbackFilters";
+import { PaginatedFeedbackList } from "@/features/feedbacks/components/PaginatedFeedbackList";
 
 const isValidScaleTeam = (scaleTeam: ScaleTeam) => {
   if (
@@ -123,17 +122,8 @@ type Props = {
 
 const Feedbacks = ({ feedbacks, projectName }: Props) => {
   const [searchWord, setSearchWord] = useState("");
-  const [targetFeedbacks, setTargetFeedbacks] = useState([] as Feedback[]);
   const [sortType, setSortType] = useState(SortType.UpdateAtDesc);
-  const [itemOffset, setItemOffset] = useState(0);
-  const currentItems = targetFeedbacks.slice(
-    itemOffset,
-    itemOffset + FEEDBACKS_PER_PAGE
-  );
-
-  useEffect(() => {
-    window.scroll(0, 0);
-  }, [currentItems]);
+  const [targetFeedbacks, setTargetFeedbacks] = useState([] as Feedback[]);
 
   // 対象となるフィードバックを更新する
   useEffect(() => {
@@ -147,8 +137,6 @@ const Feedbacks = ({ feedbacks, projectName }: Props) => {
     );
     // 更新
     setTargetFeedbacks(sortedFeedbacks);
-    // 更新後、ページを先頭に戻す
-    setItemOffset(0);
   }, [sortType, searchWord, feedbacks]);
 
   return (
@@ -165,11 +153,9 @@ const Feedbacks = ({ feedbacks, projectName }: Props) => {
           setSortType={setSortType}
           feedbackCount={targetFeedbacks.length}
         />
-        <FeedbackList feedbacks={currentItems} searchWord={searchWord} />
-        <FeedbackPagination
-          targetFeedbackCount={targetFeedbacks.length}
-          itemOffset={itemOffset}
-          setItemOffset={setItemOffset}
+        <PaginatedFeedbackList
+          targetFeedbacks={targetFeedbacks}
+          searchWord={searchWord}
         />
       </Layout>
     </>
