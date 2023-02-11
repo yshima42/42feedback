@@ -123,7 +123,7 @@ type Props = {
 
 const Feedbacks = ({ feedbacks, projectName }: Props) => {
   const [searchWord, setSearchWord] = useState("");
-  const [targetFeedbacks, setTargetFeedbacks] = useState(feedbacks);
+  const [targetFeedbacks, setTargetFeedbacks] = useState([] as Feedback[]);
   const [sortType, setSortType] = useState(SortType.UpdateAtDesc);
   const [itemOffset, setItemOffset] = useState(0);
   const currentItems = targetFeedbacks.slice(
@@ -167,7 +167,6 @@ const Feedbacks = ({ feedbacks, projectName }: Props) => {
         />
         <FeedbackList feedbacks={currentItems} searchWord={searchWord} />
         <FeedbackPagination
-          feedbackCount={feedbacks.length}
           targetFeedbackCount={targetFeedbacks.length}
           itemOffset={itemOffset}
           setItemOffset={setItemOffset}

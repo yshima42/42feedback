@@ -4,14 +4,12 @@ import ReactPaginate from "react-paginate";
 import { FEEDBACKS_PER_PAGE } from "utils/constants";
 
 type Props = {
-  feedbackCount: number;
   targetFeedbackCount: number;
   itemOffset: number;
   setItemOffset: Dispatch<SetStateAction<number>>;
 };
 
 export const FeedbackPagination = ({
-  feedbackCount,
   targetFeedbackCount,
   itemOffset,
   setItemOffset,
@@ -20,7 +18,8 @@ export const FeedbackPagination = ({
   const isPaginationDisabled = pageCount <= 1;
 
   const handlePageChange = (event: { selected: number }) => {
-    const newOffset = (event.selected * FEEDBACKS_PER_PAGE) % feedbackCount;
+    const newOffset =
+      (event.selected * FEEDBACKS_PER_PAGE) % targetFeedbackCount;
     setItemOffset(newOffset);
   };
 
