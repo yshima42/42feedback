@@ -107,7 +107,7 @@ type Props = {
 const Feedbacks = ({ feedbacks, projectName }: Props) => {
   const [state, dispatch] = useFeedbacks(feedbacks);
   const {
-    matchingFeedbacks: matchingFeedbacks,
+    matchingFeedbacks,
     searchCriteria: { searchWord },
   } = state;
 
