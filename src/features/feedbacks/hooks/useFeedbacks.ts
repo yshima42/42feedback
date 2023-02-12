@@ -2,11 +2,15 @@ import escapeStringRegexp from "escape-string-regexp";
 import { Dispatch, useReducer } from "react";
 import { Feedback, SortType } from "types/Feedback";
 
-export type FeedbacksState = {
+type SearchCriteria = {
   searchWord: string;
   sortType: SortType;
+};
+
+export type FeedbacksState = {
+  searchCriteria: SearchCriteria;
   allFeedbacks: Feedback[];
-  filteredFeedbacks: Feedback[];
+  matchingFeedbacks: Feedback[];
 };
 
 export type FeedbacksAction =
@@ -22,11 +26,6 @@ export type FeedbacksAction =
       type: "SELECT";
       sortType: SortType;
     };
-
-type FilterCondition = Omit<
-  FeedbacksState,
-  "allFeedbacks" | "filteredFeedbacks"
->;
 
 type CompareFunc = (a: Feedback, b: Feedback) => number;
 
@@ -45,69 +44,63 @@ const includesSearchWord = (feedback: Feedback, searchWord: string) => {
   return feedback.comment.match(regex) || feedback.corrector.login.match(regex);
 };
 
+const searchFeedbacks = (
+  allFeedbacks: Feedback[],
+  searchCriteria: SearchCriteria
+) => {
+  return allFeedbacks
+    .filter((feedback) =>
+      includesSearchWord(feedback, searchCriteria.searchWord)
+    )
+    .sort(compareFuncs.get(searchCriteria.sortType));
+};
+
 const feedbacksReducer = (
   state: FeedbacksState,
   action: FeedbacksAction
 ): FeedbacksState => {
-  const filterFeedbacks = (filterCondition: FilterCondition) => {
-    return state.allFeedbacks
-      .filter((feedback) =>
-        includesSearchWord(feedback, filterCondition.searchWord)
-      )
-      .sort(compareFuncs.get(filterCondition.sortType));
+  // ここでstateをディープコピーしているのは、reducerを純粋関数にするため
+  // (https://beta.reactjs.org/reference/react/useReducer#my-reducer-or-initializer-function-runs-twice)
+  let newSearchCriteria: SearchCriteria = {
+    searchWord: "for initialize",
+    sortType: SortType.UpdateAtDesc,
   };
+  Object.assign(newSearchCriteria, state.searchCriteria);
 
-  // 冗長だが、actionごとにfilteredFeedbacksを更新している
-  // case文の外で更新すると、後続のcaseの処理が行われるか考慮する必要があるため
-  // より良い書き方があれば教えてください
   switch (action.type) {
     case "INPUT": {
-      const newSearchWord = action.searchWord;
-      const newFilteredFeedbacks = filterFeedbacks({
-        searchWord: newSearchWord,
-        sortType: state.sortType,
-      });
-
-      return {
-        ...state,
-        searchWord: newSearchWord,
-        filteredFeedbacks: newFilteredFeedbacks,
-      };
+      newSearchCriteria.searchWord = action.searchWord;
+      break;
     }
     case "INPUT_COMPOSITION": {
-      const newSearchWord = state.searchWord + action.newWord;
-      const newFilteredFeedbacks = filterFeedbacks({
-        searchWord: newSearchWord,
-        sortType: state.sortType,
-      });
-
-      return {
-        ...state,
-        searchWord: newSearchWord,
-        filteredFeedbacks: newFilteredFeedbacks,
-      };
+      newSearchCriteria.searchWord += action.newWord;
+      break;
     }
     case "SELECT": {
-      const newSortType = action.sortType;
-      const newFilteredFeedbacks = filterFeedbacks({
-        searchWord: state.searchWord,
-        sortType: newSortType,
-      });
-
-      return {
-        ...state,
-        sortType: newSortType,
-        filteredFeedbacks: newFilteredFeedbacks,
-      };
+      newSearchCriteria.sortType = action.sortType;
+      break;
     }
     default:
       throw new Error("invalid action type");
   }
+  return {
+    ...state,
+    searchCriteria: newSearchCriteria,
+    matchingFeedbacks: searchFeedbacks(state.allFeedbacks, newSearchCriteria),
+  };
 };
 
 export const useFeedbacks = (
-  initialState: FeedbacksState
+  feedbacks: Feedback[]
 ): [FeedbacksState, Dispatch<FeedbacksAction>] => {
+  const initialState = {
+    searchCriteria: {
+      searchWord: "",
+      sortType: SortType.UpdateAtDesc,
+    },
+    allFeedbacks: feedbacks,
+    matchingFeedbacks: feedbacks,
+  };
   const [state, dispatch] = useReducer(feedbacksReducer, initialState);
 
   return [state, dispatch];

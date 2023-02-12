@@ -5,17 +5,13 @@ import Head from "next/head";
 import { cursusProjects } from "../../utils/objects";
 import { axiosRetryInSSG, fetchScaleTeams } from "utils/functions";
 import { CursusUser } from "types/cursusUsers";
-import { Feedback, SortType } from "types/Feedback";
+import { Feedback } from "types/Feedback";
 import cursusUsers from "utils/preval/cursus-users.preval";
 import token from "utils/preval/access-token.preval";
 import { ScaleTeam } from "types/scaleTeam";
-import escapeStringRegexp from "escape-string-regexp";
 import { FeedbackFilters } from "@/features/feedbacks/components/FeedbackFilters";
 import { PaginatedFeedbackList } from "@/features/feedbacks/components/PaginatedFeedbackList";
-import {
-  FeedbacksState,
-  useFeedbacks,
-} from "@/features/feedbacks/hooks/useFeedbacks";
+import { useFeedbacks } from "@/features/feedbacks/hooks/useFeedbacks";
 
 const isValidScaleTeam = (scaleTeam: ScaleTeam) => {
   if (
@@ -109,14 +105,11 @@ type Props = {
 };
 
 const Feedbacks = ({ feedbacks, projectName }: Props) => {
-  const initialState: FeedbacksState = {
-    searchWord: "",
-    sortType: SortType.UpdateAtDesc,
-    allFeedbacks: feedbacks,
-    filteredFeedbacks: feedbacks,
-  };
-  const [state, dispatch] = useFeedbacks(initialState);
-  const { filteredFeedbacks, searchWord } = state;
+  const [state, dispatch] = useFeedbacks(feedbacks);
+  const {
+    matchingFeedbacks: matchingFeedbacks,
+    searchCriteria: { searchWord },
+  } = state;
 
   return (
     <>
@@ -129,10 +122,10 @@ const Feedbacks = ({ feedbacks, projectName }: Props) => {
       <Layout pageTitle={projectName}>
         <FeedbackFilters
           dispatch={dispatch}
-          feedbackCount={filteredFeedbacks.length}
+          feedbackCount={matchingFeedbacks.length}
         />
         <PaginatedFeedbackList
-          feedbacks={filteredFeedbacks}
+          feedbacks={matchingFeedbacks}
           searchWord={searchWord}
         />
       </Layout>
