@@ -4,8 +4,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { SessionProvider } from "next-auth/react";
 import { AppProps } from "next/app";
 import { GoogleAnalytics } from "nextjs-google-analytics";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "styles/scroll.css";
+import "styles/pagination.css";
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (

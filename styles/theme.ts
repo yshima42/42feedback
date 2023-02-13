@@ -13,6 +13,12 @@ const theme = extendTheme({
       body: {
         backgroundColor: "gray.40",
         color: "gray.800",
+        a: {
+          color: "blue.500",
+          _hover: {
+            textDecoration: "underline",
+          },
+        },
       },
     },
   },
