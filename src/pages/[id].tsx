@@ -1,19 +1,17 @@
 import { Layout } from "@/components/Layout";
 import { GetStaticProps } from "next";
-import { SITE_NAME, FEEDBACKS_PER_PAGE } from "utils/constants";
+import { SITE_NAME } from "utils/constants";
 import Head from "next/head";
 import { cursusProjects } from "../../utils/objects";
 import { axiosRetryInSSG, fetchScaleTeams } from "utils/functions";
-import { useEffect, useState } from "react";
 import { CursusUser } from "types/cursusUsers";
-import { CompareFunc, Feedback, SortType } from "types/Feedback";
+import { Feedback } from "types/Feedback";
 import cursusUsers from "utils/preval/cursus-users.preval";
 import token from "utils/preval/access-token.preval";
 import { ScaleTeam } from "types/scaleTeam";
-import escapeStringRegexp from "escape-string-regexp";
-import { FeedbackList } from "@/features/feedbacks/components/FeedbackList";
-import { FeedbackPagination } from "@/features/feedbacks/components/FeedbackPagination";
 import { FeedbackFilters } from "@/features/feedbacks/components/FeedbackFilters";
+import { PaginatedFeedbackList } from "@/features/feedbacks/components/PaginatedFeedbackList";
+import { useFeedbacksReducer } from "@/features/feedbacks/hooks/useFeedbacks";
 
 const isValidScaleTeam = (scaleTeam: ScaleTeam) => {
   if (
@@ -101,55 +99,17 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
 };
 
-const sortTypeToCompareFunc = new Map<SortType, CompareFunc>([
-  [SortType.UpdateAtAsc, (a, b) => a.updated_at.localeCompare(b.updated_at)],
-  [SortType.UpdateAtDesc, (a, b) => b.updated_at.localeCompare(a.updated_at)],
-  [SortType.CommentLengthASC, (a, b) => a.comment.length - b.comment.length],
-  [SortType.CommentLengthDesc, (a, b) => b.comment.length - a.comment.length],
-  [SortType.None, (a, b) => 0],
-]);
-
-const includesSearchKeyword = (feedback: Feedback, searchWord: string) => {
-  // 入力された文字列を安全に正規表現に変換
-  const escapedSearchKeyword = escapeStringRegexp(searchWord);
-  const regex = new RegExp(escapedSearchKeyword, "i");
-  return feedback.comment.match(regex) || feedback.corrector.login.match(regex);
-};
-
 type Props = {
   feedbacks: Feedback[];
   projectName: string;
 };
 
 const Feedbacks = ({ feedbacks, projectName }: Props) => {
-  const [searchWord, setSearchWord] = useState("");
-  const [targetFeedbacks, setTargetFeedbacks] = useState(feedbacks);
-  const [sortType, setSortType] = useState(SortType.UpdateAtDesc);
-  const [itemOffset, setItemOffset] = useState(0);
-  const currentItems = targetFeedbacks.slice(
-    itemOffset,
-    itemOffset + FEEDBACKS_PER_PAGE
-  );
-
-  useEffect(() => {
-    window.scroll(0, 0);
-  }, [currentItems]);
-
-  // 対象となるフィードバックを更新する
-  useEffect(() => {
-    // 検索ワードでフィルタリング
-    const searchedFeedbacks = feedbacks.filter((feedback) =>
-      includesSearchKeyword(feedback, searchWord)
-    );
-    // フィルタリング後のフィードバックをソート
-    const sortedFeedbacks = searchedFeedbacks.sort(
-      sortTypeToCompareFunc.get(sortType)
-    );
-    // 更新
-    setTargetFeedbacks(sortedFeedbacks);
-    // 更新後、ページを先頭に戻す
-    setItemOffset(0);
-  }, [sortType, searchWord, feedbacks]);
+  const [state, dispatch] = useFeedbacksReducer(feedbacks);
+  const {
+    matchingFeedbacks,
+    searchCriteria: { searchWord },
+  } = state;
 
   return (
     <>
@@ -161,16 +121,12 @@ const Feedbacks = ({ feedbacks, projectName }: Props) => {
       </Head>
       <Layout pageTitle={projectName}>
         <FeedbackFilters
-          setSearchWord={setSearchWord}
-          setSortType={setSortType}
-          feedbackCount={targetFeedbacks.length}
+          dispatch={dispatch}
+          feedbackCount={matchingFeedbacks.length}
         />
-        <FeedbackList feedbacks={currentItems} searchWord={searchWord} />
-        <FeedbackPagination
-          feedbackCount={feedbacks.length}
-          targetFeedbackCount={targetFeedbacks.length}
-          itemOffset={itemOffset}
-          setItemOffset={setItemOffset}
+        <PaginatedFeedbackList
+          feedbacks={matchingFeedbacks}
+          searchWord={searchWord}
         />
       </Layout>
     </>

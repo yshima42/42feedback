@@ -17,5 +17,3 @@ export enum SortType {
   CommentLengthDesc = "CommentLengthDesc",
   None = "None",
 }
-
-export type CompareFunc = (a: Feedback, b: Feedback) => number;
