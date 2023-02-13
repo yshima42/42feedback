@@ -10,6 +10,7 @@ import {
   MenuItem,
   MenuList,
   Text,
+  textDecoration,
 } from "@chakra-ui/react";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { SITE_NAME, MAIN_COLOR } from "utils/constants";
@@ -35,7 +36,12 @@ const Header: React.FC = () => {
       <Heading as="h1" fontSize={{ base: "md", md: "xl" }}>
         <Link href="/">
           {/* next/linkだとデフォルトでホバーした時に青くなってしまうので無効化 */}
-          <Text _hover={{ color: "gray.50" }}>{SITE_NAME}</Text>
+          <Text
+            _hover={{ color: "gray.50", textDecoration: "none" }}
+            color="gray.50"
+          >
+            {SITE_NAME}
+          </Text>
         </Link>
       </Heading>
     );

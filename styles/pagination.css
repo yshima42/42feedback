@@ -6,14 +6,15 @@
   justify-content: center;
   margin-bottom: 15px;
   margin-top: 15px;
-  gap: 20px 1px;
+  gap: 20px 0px;
 }
 
 .page-item,
 .page-link {
   display: inline-flex;
   align-items: center;
-  border-radius: 5px;
+  color: #3182CE;
+  border-radius: 3px;
   justify-content: center;
   font-size: 16px;
   height: 36px;
