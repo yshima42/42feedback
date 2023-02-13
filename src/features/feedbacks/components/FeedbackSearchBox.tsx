@@ -1,19 +1,20 @@
+import { FeedbacksAction } from "@/features/feedbacks/hooks/useFeedbacks";
 import { SearchIcon } from "@chakra-ui/icons";
 import { Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, useState } from "react";
 
 type Props = {
-  setSearchWord: Dispatch<SetStateAction<string>>;
+  dispatch: Dispatch<FeedbacksAction>;
 };
 
-export const FeedbackSearchBox = ({ setSearchWord }: Props) => {
+export const FeedbackSearchBox = ({ dispatch }: Props) => {
   const [isComposing, setIsComposing] = useState(false);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (isComposing) {
       return;
     }
-    setSearchWord(event.target.value);
+    dispatch({ type: "INPUT", searchWord: event.target.value });
   };
 
   const handleCompositionStart = () => {
@@ -24,7 +25,7 @@ export const FeedbackSearchBox = ({ setSearchWord }: Props) => {
     event: React.CompositionEvent<HTMLInputElement>
   ) => {
     setIsComposing(false);
-    setSearchWord((previous: string) => previous + event.data);
+    dispatch({ type: "INPUT_COMPOSITION", newWord: event.data });
   };
 
   return (

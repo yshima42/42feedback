@@ -1,25 +1,20 @@
+import { FeedbacksAction } from "@/features/feedbacks/hooks/useFeedbacks";
 import { Flex, Text } from "@chakra-ui/react";
-import { Dispatch, SetStateAction } from "react";
-import { SortType } from "types/Feedback";
+import { Dispatch } from "react";
 import { FeedbackSearchBox } from "./FeedbackSearchBox";
 import { FeedbackSortSelect } from "./FeedbackSortSelect";
 
 type Props = {
-  setSearchWord: Dispatch<SetStateAction<string>>;
-  setSortType: Dispatch<SetStateAction<SortType>>;
+  dispatch: Dispatch<FeedbacksAction>;
   feedbackCount: number;
 };
 
-export const FeedbackFilters = ({
-  setSearchWord,
-  setSortType,
-  feedbackCount,
-}: Props) => {
+export const FeedbackFilters = ({ dispatch, feedbackCount }: Props) => {
   return (
     <>
       <Flex>
-        <FeedbackSearchBox setSearchWord={setSearchWord} />
-        <FeedbackSortSelect setSortType={setSortType} />
+        <FeedbackSearchBox dispatch={dispatch} />
+        <FeedbackSortSelect dispatch={dispatch} />
       </Flex>
       <Text opacity={0.6}>{feedbackCount} feedbacks</Text>
     </>
