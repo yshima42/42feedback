@@ -11,7 +11,7 @@ import token from "utils/preval/access-token.preval";
 import { ScaleTeam } from "types/scaleTeam";
 import { FeedbackFilters } from "@/features/feedbacks/components/FeedbackFilters";
 import { PaginatedFeedbackList } from "@/features/feedbacks/components/PaginatedFeedbackList";
-import { useFeedbacks } from "@/features/feedbacks/hooks/useFeedbacks";
+import { useFeedbacksReducer } from "@/features/feedbacks/hooks/useFeedbacks";
 
 const isValidScaleTeam = (scaleTeam: ScaleTeam) => {
   if (
@@ -105,7 +105,7 @@ type Props = {
 };
 
 const Feedbacks = ({ feedbacks, projectName }: Props) => {
-  const [state, dispatch] = useFeedbacks(feedbacks);
+  const [state, dispatch] = useFeedbacksReducer(feedbacks);
   const {
     matchingFeedbacks,
     searchCriteria: { searchWord },

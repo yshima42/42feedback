@@ -55,7 +55,7 @@ const searchFeedbacks = (
     .sort(compareFuncs.get(searchCriteria.sortType));
 };
 
-const feedbacksReducer = (
+const reducer = (
   state: FeedbacksState,
   action: FeedbacksAction
 ): FeedbacksState => {
@@ -90,7 +90,7 @@ const feedbacksReducer = (
   };
 };
 
-export const useFeedbacks = (
+export const useFeedbacksReducer = (
   feedbacks: Feedback[]
 ): [FeedbacksState, Dispatch<FeedbacksAction>] => {
   const initialState = {
@@ -101,7 +101,7 @@ export const useFeedbacks = (
     allFeedbacks: feedbacks,
     matchingFeedbacks: feedbacks,
   };
-  const [state, dispatch] = useReducer(feedbacksReducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return [state, dispatch];
 };
