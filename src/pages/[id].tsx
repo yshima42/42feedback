@@ -12,6 +12,7 @@ import { ScaleTeam } from "types/scaleTeam";
 import { FeedbackFilters } from "@/features/feedbacks/components/FeedbackFilters";
 import { PaginatedFeedbackList } from "@/features/feedbacks/components/PaginatedFeedbackList";
 import { useFeedbacksReducer } from "@/features/feedbacks/hooks/useFeedbacks";
+import { Text } from "@chakra-ui/react";
 
 const isValidScaleTeam = (scaleTeam: ScaleTeam) => {
   if (
@@ -91,7 +92,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
     return {
       props: { feedbacks, projectName: name },
-      revalidate: 60 * 60,
+      revalidate: 60,
     };
   } catch (error) {
     console.log(error);
@@ -124,6 +125,9 @@ const Feedbacks = ({ feedbacks, projectName }: Props) => {
           dispatch={dispatch}
           feedbackCount={matchingFeedbacks.length}
         />
+        <Text color="gray.500" fontSize="sm">
+          Updated at {new Date().toString()}
+        </Text>
         <PaginatedFeedbackList
           feedbacks={matchingFeedbacks}
           searchWord={searchWord}
