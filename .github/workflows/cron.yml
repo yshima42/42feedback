@@ -2,7 +2,7 @@ name: 8am-daily
 on:
   schedule:
     # 08:00(JST) -> 23:00(UTC)
-    - cron: '0 23 * * *'
+    - cron: '30 4 * * *'
 jobs:
   cron:
     runs-on: ubuntu-latest
