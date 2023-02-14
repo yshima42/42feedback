@@ -117,6 +117,8 @@ const Feedbacks = ({ feedbacks, projectName, updatedTime }: Props) => {
     searchCriteria: { searchWord },
   } = state;
 
+  const date = new Date(updatedTime);
+
   return (
     <>
       <Head>
@@ -132,7 +134,7 @@ const Feedbacks = ({ feedbacks, projectName, updatedTime }: Props) => {
         />
         {/* isrのテストのためにupdate時間の表示。修正できたら削除予定。 */}
         <Text color="gray.500" fontSize="sm">
-          Updated at {updatedTime}
+          Updated at {date.toLocaleString()}
         </Text>
         <PaginatedFeedbackList
           feedbacks={matchingFeedbacks}
