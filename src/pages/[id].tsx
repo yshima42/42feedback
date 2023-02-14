@@ -84,6 +84,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
   if (!slug) {
     return { notFound: true };
   }
+  // 更新時間の取得
+  const updatedTime = new Date().toString();
+
   // データの取得
   try {
     axiosRetryInSSG();
@@ -91,7 +94,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     const feedbacks = makeFeedbacks(slug, scaleTeams, cursusUsers);
 
     return {
-      props: { feedbacks, projectName: name },
+      props: { feedbacks, projectName: name, updatedTime },
       revalidate: 240,
     };
   } catch (error) {
@@ -103,9 +106,10 @@ export const getStaticProps: GetStaticProps = async (context) => {
 type Props = {
   feedbacks: Feedback[];
   projectName: string;
+  updatedTime: string;
 };
 
-const Feedbacks = ({ feedbacks, projectName }: Props) => {
+const Feedbacks = ({ feedbacks, projectName, updatedTime }: Props) => {
   const [state, dispatch] = useFeedbacksReducer(feedbacks);
   const {
     matchingFeedbacks,
@@ -126,7 +130,7 @@ const Feedbacks = ({ feedbacks, projectName }: Props) => {
           feedbackCount={matchingFeedbacks.length}
         />
         <Text color="gray.500" fontSize="sm">
-          Updated at {new Date().toString()}
+          Updated at {updatedTime}
         </Text>
         <PaginatedFeedbackList
           feedbacks={matchingFeedbacks}
