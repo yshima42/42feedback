@@ -1,7 +1,7 @@
 export const cursusProjects = [
   {
-    slug: "42cursus-fdf",
-    name: "fdf",
-    rank: 2,
+    slug: "ft_transcendence",
+    name: "ft_transcendence",
+    rank: 6,
   },
 ];
