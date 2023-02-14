@@ -96,7 +96,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
     return {
       props: { feedbacks, projectName: name, updatedTime },
-      revalidate: 240,
+      revalidate: 60,
     };
   } catch (error) {
     console.log(error);
