@@ -84,6 +84,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   if (!slug) {
     return { notFound: true };
   }
+  // TODO: ISR修正できたら削除
   // 更新時間の取得
   const updatedTime = new Date().toString();
 
@@ -129,6 +130,7 @@ const Feedbacks = ({ feedbacks, projectName, updatedTime }: Props) => {
           dispatch={dispatch}
           feedbackCount={matchingFeedbacks.length}
         />
+        {/* isrのテストのためにupdate時間の表示。修正できたら削除予定。 */}
         <Text color="gray.500" fontSize="sm">
           Updated at {updatedTime}
         </Text>
