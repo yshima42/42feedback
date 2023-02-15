@@ -7,7 +7,8 @@ module.exports = {
   },
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
-    "types/(.*)": "<rootDir>/types/$1",
+    "^types/(.*)": "<rootDir>/types/$1",
+    "^utils/(.*)": "<rootDir>/utils/$1",
   },
   testMatch: ["**/*.spec.(js|jsx|ts|tsx)"],
   transformIgnorePatterns: ["/node_modules/(?!escape-string-regexp)"],

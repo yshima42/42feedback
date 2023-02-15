@@ -2,6 +2,7 @@ import { FeedbacksAction } from "@/features/feedbacks/hooks/useFeedbacks";
 import { SearchIcon } from "@chakra-ui/icons";
 import { Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import { Dispatch, useState } from "react";
+import { INPUT_MAX_LENGTH } from "utils/constants";
 
 type Props = {
   dispatch: Dispatch<FeedbacksAction>;
@@ -35,6 +36,7 @@ export const FeedbackSearchBox = ({ dispatch }: Props) => {
       </InputLeftElement>
       <Input
         placeholder="login or comment"
+        maxLength={INPUT_MAX_LENGTH}
         onChange={handleInputChange}
         onCompositionStart={handleCompositionStart}
         onCompositionEnd={handleCompositionEnd}
