@@ -136,10 +136,10 @@ const Feedbacks = ({ feedbacks, projectName, updatedTime }: Props) => {
         <Text color="gray.500" fontSize="sm">
           Updated at {date.toLocaleString()}
         </Text>
-        {/* <PaginatedFeedbackList
+        <PaginatedFeedbackList
           feedbacks={matchingFeedbacks}
           searchWord={searchWord}
-        /> */}
+        />
       </Layout>
     </>
   );
