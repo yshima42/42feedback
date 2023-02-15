@@ -128,10 +128,10 @@ const Feedbacks = ({ feedbacks, projectName, updatedTime }: Props) => {
         </title>
       </Head>
       <Layout pageTitle={projectName}>
-        {/* <FeedbackFilters
+        <FeedbackFilters
           dispatch={dispatch}
           feedbackCount={matchingFeedbacks.length}
-        /> */}
+        />
         {/* isrのテストのためにupdate時間の表示。修正できたら削除予定。 */}
         <Text color="gray.500" fontSize="sm">
           Updated at {date.toLocaleString()}
