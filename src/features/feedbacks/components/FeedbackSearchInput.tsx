@@ -8,7 +8,7 @@ type Props = {
   dispatch: Dispatch<FeedbacksAction>;
 };
 
-export const FeedbackSearchBox = ({ dispatch }: Props) => {
+export const FeedbackSearchInput = ({ dispatch }: Props) => {
   const [isComposing, setIsComposing] = useState(false);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,17 +1,19 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { FeedbackSearchBox } from "./FeedbackSearchBox";
+import { FeedbackSearchInput } from "./FeedbackSearchInput";
 import { INPUT_MAX_LENGTH } from "utils/constants";
 
-describe("FeedbackSearchBox", () => {
+describe("FeedbackSearchInput", () => {
   it("should render successfully", () => {
-    const { baseElement } = render(<FeedbackSearchBox dispatch={jest.fn()} />);
+    const { baseElement } = render(
+      <FeedbackSearchInput dispatch={jest.fn()} />
+    );
     expect(baseElement).toBeTruthy();
   });
   it("limits input length", async () => {
     // ARRANGE
-    render(<FeedbackSearchBox dispatch={jest.fn()} />);
+    render(<FeedbackSearchInput dispatch={jest.fn()} />);
 
     const input: HTMLInputElement = screen.getByRole("textbox");
     const longText = "x".repeat(INPUT_MAX_LENGTH + 1);
