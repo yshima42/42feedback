@@ -76,10 +76,10 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   // 引数のバリデーション
-  // if (!context.params) {
-  //   return { notFound: true };
-  // }
-  const name = "ft_transcendence";
+  if (!context.params) {
+    return { notFound: true };
+  }
+  const name = context.params.id as string;
   const slug = cursusProjects.find((project) => project.name === name)?.slug;
   if (!slug) {
     return { notFound: true };
@@ -90,12 +90,12 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
   // データの取得
   try {
-    // axiosRetryInSSG();
-    // const scaleTeams = await fetchScaleTeams(slug, token.access_token);
-    // const feedbacks = makeFeedbacks(slug, scaleTeams, cursusUsers);
+    axiosRetryInSSG();
+    const scaleTeams = await fetchScaleTeams(slug, token.access_token);
+    const feedbacks = makeFeedbacks(slug, scaleTeams, cursusUsers);
 
     return {
-      props: { updatedTime },
+      props: { feedbacks, projectName: name, updatedTime },
       revalidate: 60,
     };
   } catch (error) {
@@ -105,17 +105,17 @@ export const getStaticProps: GetStaticProps = async (context) => {
 };
 
 type Props = {
-  // feedbacks: Feedback[];
-  // projectName: string;
+  feedbacks: Feedback[];
+  projectName: string;
   updatedTime: string;
 };
 
-const Feedbacks = ({ updatedTime }: Props) => {
-  // const [state, dispatch] = useFeedbacksReducer(feedbacks);
-  // const {
-  //   matchingFeedbacks,
-  //   searchCriteria: { searchWord },
-  // } = state;
+const Feedbacks = ({ feedbacks, projectName, updatedTime }: Props) => {
+  const [state, dispatch] = useFeedbacksReducer(feedbacks);
+  const {
+    matchingFeedbacks,
+    searchCriteria: { searchWord },
+  } = state;
 
   const date = new Date(updatedTime);
 
@@ -123,9 +123,11 @@ const Feedbacks = ({ updatedTime }: Props) => {
     <>
       <Head>
         <meta name="robots" content="noindex,nofollow" />
-        <title>{/* {projectName} - {SITE_NAME} */}</title>
+        <title>
+          {projectName} - {SITE_NAME}
+        </title>
       </Head>
-      <Layout pageTitle="a">
+      <Layout pageTitle={projectName}>
         {/* <FeedbackFilters
           dispatch={dispatch}
           feedbackCount={matchingFeedbacks.length}
