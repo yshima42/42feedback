@@ -84,9 +84,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
   if (!slug) {
     return { notFound: true };
   }
-  // TODO: ISR修正できたら削除
-  // 更新時間の取得
-  const updatedTime = new Date().toString();
 
   // データの取得
   try {
@@ -95,7 +92,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     const feedbacks = makeFeedbacks(slug, scaleTeams, cursusUsers);
 
     return {
-      props: { feedbacks, projectName: name, updatedTime },
+      props: { feedbacks, projectName: name },
     };
   } catch (error) {
     console.log(error);
@@ -106,17 +103,14 @@ export const getStaticProps: GetStaticProps = async (context) => {
 type Props = {
   feedbacks: Feedback[];
   projectName: string;
-  updatedTime: string;
 };
 
-const Feedbacks = ({ feedbacks, projectName, updatedTime }: Props) => {
+const Feedbacks = ({ feedbacks, projectName }: Props) => {
   const [state, dispatch] = useFeedbacksReducer(feedbacks);
   const {
     matchingFeedbacks,
     searchCriteria: { searchWord },
   } = state;
-
-  const date = new Date(updatedTime);
 
   return (
     <>
@@ -131,10 +125,6 @@ const Feedbacks = ({ feedbacks, projectName, updatedTime }: Props) => {
           dispatch={dispatch}
           feedbackCount={matchingFeedbacks.length}
         />
-        {/* isrのテストのためにupdate時間の表示。修正できたら削除予定。 */}
-        <Text color="gray.500" fontSize="sm">
-          Updated at {date.toLocaleString()}
-        </Text>
         <PaginatedFeedbackList
           feedbacks={matchingFeedbacks}
           searchWord={searchWord}
