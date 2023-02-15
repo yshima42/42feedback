@@ -1,0 +1,13 @@
+name: test
+
+on: [pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: install package
+        run: yarn install
+      - name: run test
+        run: yarn test

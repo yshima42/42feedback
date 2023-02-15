@@ -10,3 +10,4 @@ export const MAIN_COLOR = "gray.700";
 export const HIGHLIGHT_COLOR = "yellow.100";
 
 export const FEEDBACKS_PER_PAGE = 20;
+export const INPUT_MAX_LENGTH = 200;

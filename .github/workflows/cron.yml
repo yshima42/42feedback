@@ -9,7 +9,7 @@ jobs:
     env:
       VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
     steps:
-      - name: Vercel Depoloy
+      - name: Vercel Deploy
         run: |
           curl --request POST \
           --url "$VERCEL_DEPLOY_HOOK_URL"
