@@ -3,6 +3,10 @@
 const nextConfig = {
   reactStrictMode: true,
   staticPageGenerationTimeout: 600,
+  experimental: {
+    // babel.config.jsが存在してもSWCによるコンパイルを行う
+    forceSwcTransforms: true,
+  },
 };
 
 // importを使うとエラー。公式通りにrequireを使う
