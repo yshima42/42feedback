@@ -1,6 +1,7 @@
 name: hourly-update
 on:
   schedule:
+  # 毎時0分にデプロイ
     - cron: '0 * * * *'
 jobs:
   cron:
