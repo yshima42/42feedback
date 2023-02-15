@@ -47,11 +47,11 @@ const Footer: React.FC = () => {
           <Stack direction="row" spacing="8">
             <Stack spacing="4" minW="36" flex="1">
               <Text fontSize="sm" fontWeight="semibold" color="subtle">
-                Product
+                Other Product
               </Text>
               <Stack spacing="3" shouldWrapChildren>
                 <Link href="/same-grade">
-                  <Button variant="link">Other work</Button>
+                  <Button variant="link">42 Progress (Developing)</Button>
                 </Link>
               </Stack>
             </Stack>
