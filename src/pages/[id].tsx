@@ -76,10 +76,10 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   // 引数のバリデーション
-  if (!context.params) {
-    return { notFound: true };
-  }
-  const name = context.params.id as string;
+  // if (!context.params) {
+  //   return { notFound: true };
+  // }
+  const name = "ft_transcendence";
   const slug = cursusProjects.find((project) => project.name === name)?.slug;
   if (!slug) {
     return { notFound: true };
