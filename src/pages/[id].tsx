@@ -90,12 +90,12 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
   // データの取得
   try {
-    axiosRetryInSSG();
-    const scaleTeams = await fetchScaleTeams(slug, token.access_token);
-    const feedbacks = makeFeedbacks(slug, scaleTeams, cursusUsers);
+    // axiosRetryInSSG();
+    // const scaleTeams = await fetchScaleTeams(slug, token.access_token);
+    // const feedbacks = makeFeedbacks(slug, scaleTeams, cursusUsers);
 
     return {
-      props: { feedbacks, projectName: name, updatedTime },
+      props: { updatedTime },
       revalidate: 60,
     };
   } catch (error) {
@@ -105,17 +105,17 @@ export const getStaticProps: GetStaticProps = async (context) => {
 };
 
 type Props = {
-  feedbacks: Feedback[];
-  projectName: string;
+  // feedbacks: Feedback[];
+  // projectName: string;
   updatedTime: string;
 };
 
-const Feedbacks = ({ feedbacks, projectName, updatedTime }: Props) => {
-  const [state, dispatch] = useFeedbacksReducer(feedbacks);
-  const {
-    matchingFeedbacks,
-    searchCriteria: { searchWord },
-  } = state;
+const Feedbacks = ({ updatedTime }: Props) => {
+  // const [state, dispatch] = useFeedbacksReducer(feedbacks);
+  // const {
+  //   matchingFeedbacks,
+  //   searchCriteria: { searchWord },
+  // } = state;
 
   const date = new Date(updatedTime);
 
@@ -123,23 +123,21 @@ const Feedbacks = ({ feedbacks, projectName, updatedTime }: Props) => {
     <>
       <Head>
         <meta name="robots" content="noindex,nofollow" />
-        <title>
-          {projectName} - {SITE_NAME}
-        </title>
+        <title>{/* {projectName} - {SITE_NAME} */}</title>
       </Head>
-      <Layout pageTitle={projectName}>
-        <FeedbackFilters
+      <Layout pageTitle="a">
+        {/* <FeedbackFilters
           dispatch={dispatch}
           feedbackCount={matchingFeedbacks.length}
-        />
+        /> */}
         {/* isrのテストのためにupdate時間の表示。修正できたら削除予定。 */}
         <Text color="gray.500" fontSize="sm">
           Updated at {date.toLocaleString()}
         </Text>
-        <PaginatedFeedbackList
+        {/* <PaginatedFeedbackList
           feedbacks={matchingFeedbacks}
           searchWord={searchWord}
-        />
+        /> */}
       </Layout>
     </>
   );
