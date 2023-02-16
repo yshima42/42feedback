@@ -1,4 +1,4 @@
-name: hourly-update
+name: every-2hour-update
 on:
   schedule:
   # 毎時0分にデプロイ
