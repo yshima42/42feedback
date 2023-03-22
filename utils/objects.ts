@@ -115,6 +115,11 @@ export const cursusProjects = [
     rank: 4,
   },
   {
+    slug: "cpp-module-09",
+    name: "cpp09",
+    rank: 4,
+  },
+  {
     slug: "netpractice",
     name: "netpractice",
     rank: 4,
