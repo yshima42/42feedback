@@ -1,0 +1,15 @@
+name: every-2hour-update
+on:
+  schedule:
+  # 毎時0分にデプロイ
+    - cron: "0 */2 * * *"
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+    steps:
+      - name: Vercel Deploy
+        run: |
+          curl --request POST \
+          --url "$VERCEL_DEPLOY_HOOK_URL"

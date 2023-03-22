@@ -20,16 +20,14 @@ export const ProjectLists: React.FC<Props> = (props) => {
       <Text fontSize="lg" fontWeight="bold">
         Rank {designatedRank}
       </Text>
-      <Box marginLeft={"1em"}>
+      <Box marginLeft={"1em"} fontSize="lg">
         <UnorderedList spacing={0.5}>
           {cursusProjects
             .filter((value) => value.rank === designatedRank)
             .map((cursusProject) => (
               <ListItem key={cursusProject.name}>
                 <Link href={`/${cursusProject.name}`}>
-                  <Text color="blue.500" fontSize="lg">
-                    {cursusProject.name}
-                  </Text>
+                  {cursusProject.name}
                 </Link>
               </ListItem>
             ))}

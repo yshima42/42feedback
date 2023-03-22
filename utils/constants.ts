@@ -8,6 +8,6 @@ export const CAMPUS_ID_PARIS = 1;
 export const SITE_NAME = "42 Feedback";
 export const MAIN_COLOR = "gray.700";
 export const HIGHLIGHT_COLOR = "yellow.100";
-export const FOOTER_HEIGHT = { base: "3rem", md: "4rem" };
 
 export const FEEDBACKS_PER_PAGE = 20;
+export const INPUT_MAX_LENGTH = 200;
