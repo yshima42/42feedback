@@ -50,8 +50,8 @@ export const fetchAccessToken = async () => {
   const reqOptions = {
     url: `${API_URL}/oauth/token`,
     method: "POST",
-    headers: headersList,
     data: bodyContent,
+    headers: headersList,
   };
 
   const response = await axios.request(reqOptions);
