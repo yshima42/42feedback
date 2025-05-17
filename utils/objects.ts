@@ -1,25 +1,5 @@
 export const cursusProjects = [
   {
-    slug: "42cursus-libft",
-    name: "libft",
-    rank: 0,
-  },
-  {
-    slug: "42cursus-ft_printf",
-    name: "ft_printf",
-    rank: 1,
-  },
-  {
-    slug: "42cursus-get_next_line",
-    name: "get_next_line",
-    rank: 1,
-  },
-  {
-    slug: "born2beroot",
-    name: "born2beroot",
-    rank: 1,
-  },
-  {
     slug: "42cursus-push_swap",
     name: "push_swap",
     rank: 2,
